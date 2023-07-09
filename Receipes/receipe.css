@@ -1,0 +1,50 @@
+h2 {
+    color           : rgb(172, 172, 8);
+    font-size       : 11pt;
+    background-color: rgb(235, 227, 227);
+    text-decoration : underline;
+    font-weight     : bold;
+    font-family     :'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#text {
+    text-align: center;
+    font-size : 25pt;
+}
+
+body {
+    background-color: white;
+    background-image: url("../Images/silverware.jpg");
+    color           : rgb(54, 53, 53);
+    font-family     : georgia, Garamond, serif;
+    font-size       : 11pt;
+    padding         : 0pt;
+    margin-bottom   : 10%;
+    margin-right    : 20%;
+    margin-left     : 20%;
+}
+
+.userComment {
+    font-style: italic;
+    background-color: yellow;
+}
+
+
+
+#abbr {
+    text-decoration: underline;
+
+}
+
+.link a{
+    color: rgb(184, 184, 30);
+}
+.fotter{
+    margin-top: 5em;
+    float:right;
+    text-align: right;
+}
+
+.validator{
+    float: right;
+}
