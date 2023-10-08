@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONPlaceholder Blog SPA (jQuery AJAX)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <h1>JSONPlaceholder Blog SPA (jQuery AJAX)</h1>
+        <form id="user-form">
+            <label for="user-id">Enter User ID:</label>
+            <input type="number" id="user-id" required>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="user-details">
+            <!-- User details will be displayed here -->
+        </div>
+        <div id="posts">
+            <!-- Posts will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const userForm = $("#user-form");
+            const userIdInput = $("#user-id");
+            const userDetails = $("#user-details");
+            const postsContainer = $("#posts");
+
+            // Function to fetch user data
+            function fetchUser(userId) {
+                return $.ajax({
+                    url: `http://jsonplaceholder.typicode.com/users/${userId}`,
+                    method: "GET",
+                    dataType: "json"
+                }).done(functionName);
+            }
+
+            function functionName(user) {
+                if (user) {
+                    userDetails.html(`
+                            <h2>${user.name}</h2>
+                            <p>Email: ${user.email}</p>
+                            <p>Address: ${user.address.street}, ${user.address.city}</p>
+                        `);
+                } else {
+                    userDetails.html("<p>User not found.</p>");
+                    postsContainer.html("");
+                }
+            }
+
+            // Function to fetch user's posts
+            function fetchUserPosts(userId) {
+                return $.ajax({
+                    url: `http://jsonplaceholder.typicode.com/posts?userId=${userId}`,
+                    method: "GET",
+                    dataType: "json"
+                }).done(functionName2);
+            }
+
+            function functionName2(posts) {
+
+                const postsHTML = posts.map(post => `
+                        <div class="post" data-post-id="${post.id}">
+                            <h3>${post.title}</h3>
+                            <p>${post.body}</p>
+                            <button class="show-comments">Show Comments</button>
+                            <div class="comments"></div>
+                        </div>
+                    `).join("");
+
+                postsContainer.html(postsHTML);
+
+            }
+
+            // Function to fetch comments for a post
+            function fetchComments(postId) {
+                return $.ajax({
+                    url: `http://jsonplaceholder.typicode.com/comments?postId=${postId}`,
+                    method: "GET",
+                    dataType: "json"
+                }).done(function (comments) {
+                    const commentsHTML = comments.map(comment => `
+                        <div class="comment">
+                            <strong>${comment.name}</strong>
+                            <p>${comment.body}</p>
+                        </div>
+                    `).join("");
+                    const commentsContainer = $(`.post[data-post-id="${postId}"] .comments`);
+                    commentsContainer.html(commentsHTML);
+                });
+            }
+
+            // Event listener for the user form submission
+            userForm.submit(function (e) {
+                e.preventDefault();
+                const userId = userIdInput.val();
+                fetchUser(userId);
+                fetchUserPosts(userId);
+            });
+
+            // Event delegation for showing comments
+            postsContainer.on("click", ".show-comments", function () {
+                const postElement = $(this).closest(".post");
+                const postId = postElement.data("post-id");
+                fetchComments(postId);
+            });
+        });
+    </script>
+</body>
+
+</html>
